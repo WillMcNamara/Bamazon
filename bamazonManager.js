@@ -110,3 +110,33 @@ function addInv(){
         }
     })
 }
+
+function addProd(){
+    inquirer.prompt([
+        {
+            message: "Name of product?",
+            name: "product_name"
+        },
+        {
+            message: "Name of department?",
+            name: "department_name"
+        },
+        {
+            message: "Price?",
+            name: "price",
+            type: "number"
+        },
+        {
+            message: "Number in Stock?",
+            name: "stock",
+            type: "number"
+        }
+    ]).then(function(res){
+        query = "INSERT INTO products (product_name, department_name, price, stock) VALUES ('" + res.product_name + "', '" + res.department_name + "', " + res.price + ", " + res.stock + ")";
+        console.log(query);
+        connection.query(query, function(err, resp){
+            console.log(res.product_name + " added!");
+            managePrompt();
+        })
+    })
+}
