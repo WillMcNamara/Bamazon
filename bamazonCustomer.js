@@ -59,13 +59,12 @@ function quantityPrompt(items, tempArr, resp){
             name: "amount",
         }
     ]).then(function(response){
-        console.log(items.indexOf(resp.item));
+        console.log(resp.item);
         if (response.amount > tempArr[items.indexOf(resp.item)].stock){
             console.log("Not enough in stock.");
         }
         else {
-            query = "UPDATE products SET stock = " + (tempArr[items.indexOf(resp.item)].stock - response.amount) + " WHERE product_name = " + response.item;
-            console.log(query);
+            query = "UPDATE products SET stock = " + (tempArr[items.indexOf(resp.item)].stock - response.amount) + " WHERE product_name = '" + resp.item + "'";
             connection.query(query, function(err, res){
                 console.log("Bought " + response.amount + " " + resp.item + "s!\n")
             })
