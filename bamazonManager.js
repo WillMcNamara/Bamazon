@@ -50,11 +50,14 @@ function managePrompt(){
     })
 }
 
+var tempArr = [];
+var ids = []
+
 function viewProd(callback){
     var query = "SELECT * FROM products"
     connection.query(query, function(err, res){
-        var tempArr = [];
-        var ids = [];
+        tempArr = [];
+        ids = [];
         for (i = 0; i < res.length; i++){
             tempArr.push(res[i]);
             ids.push(res[i].id);
@@ -79,16 +82,31 @@ function viewLow(){
 }
 
 function addInv(){
+    
     inquirer.prompt([
         {
             message: "Enter the ID of the item would you like to update.",
             name: "id",
+            type: "number"
         },
         {
             message: "How much inventory are we adding?",
-            name: "add"
+            name: "add",
+            type: "number"
         }
     ]).then(function(res){
+        if (0 < res.id && res.id <= tempArr.length && res){
+            var index = tempArr[ids.indexOf(res.id)];
 
+            query = "UPDATE products SET stock = " + (index.stock + res.add) + " WHERE id = " + res.id;
+            connection.query(query, function(err, resp){
+                console.log("\n" + index.product_name + " updated!\n");
+                managePrompt();
+            })        
+        }
+        else {
+            console.log("\nNot a valid input, try again.\n");
+            addInv();
+        }
     })
 }
