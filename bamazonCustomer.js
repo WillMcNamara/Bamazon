@@ -57,6 +57,7 @@ function itemPrompt(ids, tempArr){
     })
 }
 
+//asks for quantity after getting item
 function quantityPrompt(ids, tempArr, resp){
     inquirer.prompt([
         {
@@ -65,13 +66,17 @@ function quantityPrompt(ids, tempArr, resp){
             name: "amount",
         }
     ]).then(function(response){
-        if (response.amount > tempArr[ids.indexOf(parseInt(resp.id))].stock){
+        
+        var index = tempArr[ids.indexOf(parseInt(resp.id))];
+    
+        if (response.amount > index.stock){
             console.log("Not enough in stock.");
         }
         else {
-            query = "UPDATE products SET stock = " + (tempArr[ids.indexOf(parseInt(resp.id))].stock - response.amount) + " WHERE id = " + resp.id;
+            query = "UPDATE products SET stock = " + (index.stock - response.amount) + " WHERE id = " + resp.id;
             connection.query(query, function(err, res){
-                console.log("Bought " + response.amount + " " + tempArr[ids.indexOf(parseInt(resp.id))].product_name + "s!\n")
+                console.log("\nBought " + response.amount + " " + index.product_name + "s!");
+                console.log("Cost of purchase: " + response.amount * index.price + "\n");
             })
         }
         display();
